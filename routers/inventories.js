@@ -2,22 +2,6 @@ const database = require('../database/database');
 const router = require('express').Router();
 
 router.get('/', (req, res, next) => {
-  // return database.queryPromise(`SELECT * FROM HW2_inventories ORDER BY id;`, [], function (error, result) {
-  //   if (error) {
-  //     return next(error);
-  //   }
-
-  //   const itemsArray = [];
-  //   for (let i = 0; i < result.rows.length; i++) {
-  //     const item = result.rows[i];
-  //     itemsArray.push({
-  //       id: item.id,
-  //       itemName: item.itemname,
-  //       itemQuantity: item.itemquantity,
-  //     });
-  //   }
-  //   return res.json({ inventoryItems: itemsArray });
-  // });
   return database.queryPromise(`SELECT * FROM HW2_inventories ORDER BY id;`)
     .then(result => {
       const itemsArray = [];
@@ -43,18 +27,6 @@ router.put('/', (req, res, next) => {
   let ItemQuantity = req.body.itemQuantity;
   let query = 'UPDATE HW2_inventories SET itemname = $1, itemquantity = $2 WHERE id = $3';
 
-  // return database.queryPromise(query, [ItemName, ItemQuantity, itemID], (error, result) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return res.status(500).json({
-  //       message: error
-  //     })
-  //   }
-  //   if (result.rowCount === 0) {
-  //     return next(createHttpError(404, `Item with ID ${itemID} cannot be found`));
-  //   }
-  //   return res.sendStatus(200);
-  // });
   return database.queryPromise(query, [ItemName, ItemQuantity, itemID])
     .then(response => {
       if (response.rowCount === 0) {
@@ -74,17 +46,6 @@ router.post('/', (req, res, next) => {
 
   let queryString = `INSERT INTO hw2_inventories (itemname, itemquantity) VALUES ($1, $2);`;
 
-  // return database.queryPromise(queryString, [itemName, itemQuantity], (error, result) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return res.status(500)
-  //   }
-
-  //   res.status(201).json({
-  //     data: result
-  //   })
-  // })
-
   return database.queryPromise(queryString, [itemName, itemQuantity])
     .then(response => {
       return res.status(201).json({
@@ -101,16 +62,6 @@ router.delete('/', (req, res, next) => {
   let itemToDeleteID = req.query.itemID; //why query and not params? Both query and params has itemID value
 
   let queryString = `DELETE FROM hw2_inventories WHERE id = $1`;
-
-  // return database.queryPromise(queryString, [itemToDeleteID], (error, result) => {
-  //   if (error) {
-  //     return res.status(500)
-  //   }
-
-  //   res.status(200).json({
-  //     message: 'delete successful'
-  //   })
-  // })
 
   return database.queryPromise(queryString, [itemToDeleteID])
     .then(() => {
